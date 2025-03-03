@@ -1,187 +1,123 @@
-* {
-  box-sizing: border-box;
-}
-
-body,
-button,
-dd,
-div,
-dl,
-dt,
-figure,
-li,
-ul {
+body {
+  font-family: 'Montserrat', sans-serif;
   margin: 0;
   padding: 0;
+  background-color: #f5f5f5;
 }
 
-button {
-  all: unset;
-}
-
-body {
-  padding-block: 48px;
-  font-family: 'Montserrat', sans-serif;
-}
-
-/* #region FORM */
-
-search {
-  margin: 0 auto;
-  width: fit-content;
-}
-
-form {
+.search-form {
   display: flex;
+  justify-content: center;
   gap: 8px;
+  margin-top: 36px;
+  margin-bottom: 32px;
 }
 
-form input {
-  font-family: inherit;
-  line-height: 1.5;
-  font-size: 16px;
-  color: #2e2f42;
-}
-
-form input {
-  display: block;
-  border-radius: 4px;
-  border: 1px solid #808080;
+.search-input {
   width: 272px;
-  padding: 7px 15px;
-  letter-spacing: 0.04em;
-  transition: border-color 200ms linear;
-}
-
-form input:hover {
-  border-color: #000000;
-}
-
-form input:focus {
-  border-color: #4e75ff;
-  outline: none;
-}
-
-form button {
-  display: block;
-  border-radius: 8px;
   padding: 8px 16px;
-  font-weight: 500;
-  color: #fff;
+  border-radius: 4px;
+  outline: none;
+  border: 1 solid #808080;
+}
+
+.search-button {
+  width: 91px;
+  height: 40px;
+  padding: 8px 16px;
   background-color: #4e75ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
 }
 
-form button:hover {
-  background-color: #6c8cff;
-}
-
-form button:disabled {
-  color: #989898;
-  background-color: #cfcfcf;
-  cursor: default;
-}
-
-/* #endregion */
-
-/* #region GALLERY */
-img {
-  display: block;
-  max-width: 100%;
-}
-
-ul {
-  list-style: none;
-}
-
 .gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  margin-inline: auto;
-  width: 1440px;
-  padding: 24px 156px;
+  display: grid;
+  max-width: 1128px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-gap: 24px;
+  padding: 0px;
+  margin: auto;
 }
 
 .gallery-item {
-  width: calc((100% - 24px * 2) / 3);
-  height: 200px;
-}
-
-.thumb-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
+  width: 360px;
+  max-height: 200px;
   border: 1px solid #808080;
+  overflow: hidden;
+  position: relative;
 }
 
-.thumb-image {
+.gallery-image {
   width: 100%;
-  height: 100%;
-  max-height: 100%;
-  object-fit: cover;
-  object-position: center;
-  transition: transform 250ms linear;
+  display: block;
+  transition: transform 0.3s ease;
 }
 
-.thumb-data {
+.gallery-image:hover {
+  transform: scale(1.05);
+}
+
+.info {
+  background-color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
   position: absolute;
-  right: 0;
   bottom: 0;
   left: 0;
-  padding-block: 4px;
-  background-color: #fff;
+  width: 100%;
+  background-color: rgba(255, 255, 255);
+  padding: 10px;
+  box-sizing: border-box;
 }
 
-.thumb-data-list {
-  display: flex;
-  justify-content: space-around;
+.info p {
+  font-weight: 400;
   font-size: 12px;
+  line-height: 1.3;
   letter-spacing: 0.04em;
   color: #2e2f42;
+  margin: 5px 0;
+  display: grid;
+  text-align: center;
 }
 
-.thumb-data-title {
-  display: block;
-  line-height: 1.33;
+.info b {
   font-weight: 600;
-  text-align: center;
+  font-size: 12px;
 }
 
-.thumb-data-data {
-  display: block;
-  line-height: 2;
+.container {
+  display: flex;
   text-align: center;
-}
-
-.loader-box {
-  margin-block: 48px;
-  text-align: center;
+  justify-content: center;
+  margin: 0;
 }
 
 .loader {
-  box-sizing: border-box;
-  display: inline-block;
-  border-radius: 50%;
-  border: 5px solid #66b2ff;
-  border-bottom-color: transparent;
-  width: 48px;
-  height: 48px;
-  animation: rotation 1s linear infinite;
+  margin: 0 auto;
 }
 
-@keyframes rotation {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.load-more {
+  display: flex;
+  margin-inline: auto;
+  background-color: #4e75ff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px 16px;
+  transition: 250ms cubic-bezier(0.455, 0.03, 0.515, 0.955);
+}
+
+.load-more:hover {
+  background-color: #3d65e2;
 }
 
 .hidden {
   display: none;
 }
 
-/* #endregion */
-
+ 
