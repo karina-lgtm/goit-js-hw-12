@@ -1,0 +1,10 @@
+.simple-lightbox {
+    background-color: #2e2f42cc;
+  }
+  
+  .simple-lightbox .sl-close,
+  .sl-wrapper .sl-navigation button,
+  .sl-wrapper .sl-counter {
+    color: #fff;
+  }
+  

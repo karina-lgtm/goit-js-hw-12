@@ -1,0 +1,187 @@
+* {
+  box-sizing: border-box;
+}
+
+body,
+button,
+dd,
+div,
+dl,
+dt,
+figure,
+li,
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  all: unset;
+}
+
+body {
+  padding-block: 48px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* #region FORM */
+
+search {
+  margin: 0 auto;
+  width: fit-content;
+}
+
+form {
+  display: flex;
+  gap: 8px;
+}
+
+form input {
+  font-family: inherit;
+  line-height: 1.5;
+  font-size: 16px;
+  color: #2e2f42;
+}
+
+form input {
+  display: block;
+  border-radius: 4px;
+  border: 1px solid #808080;
+  width: 272px;
+  padding: 7px 15px;
+  letter-spacing: 0.04em;
+  transition: border-color 200ms linear;
+}
+
+form input:hover {
+  border-color: #000000;
+}
+
+form input:focus {
+  border-color: #4e75ff;
+  outline: none;
+}
+
+form button {
+  display: block;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #4e75ff;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #6c8cff;
+}
+
+form button:disabled {
+  color: #989898;
+  background-color: #cfcfcf;
+  cursor: default;
+}
+
+/* #endregion */
+
+/* #region GALLERY */
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ul {
+  list-style: none;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-inline: auto;
+  width: 1440px;
+  padding: 24px 156px;
+}
+
+.gallery-item {
+  width: calc((100% - 24px * 2) / 3);
+  height: 200px;
+}
+
+.thumb-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  border: 1px solid #808080;
+}
+
+.thumb-image {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 250ms linear;
+}
+
+.thumb-data {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-block: 4px;
+  background-color: #fff;
+}
+
+.thumb-data-list {
+  display: flex;
+  justify-content: space-around;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #2e2f42;
+}
+
+.thumb-data-title {
+  display: block;
+  line-height: 1.33;
+  font-weight: 600;
+  text-align: center;
+}
+
+.thumb-data-data {
+  display: block;
+  line-height: 2;
+  text-align: center;
+}
+
+.loader-box {
+  margin-block: 48px;
+  text-align: center;
+}
+
+.loader {
+  box-sizing: border-box;
+  display: inline-block;
+  border-radius: 50%;
+  border: 5px solid #66b2ff;
+  border-bottom-color: transparent;
+  width: 48px;
+  height: 48px;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+/* #endregion */
+
