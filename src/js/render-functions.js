@@ -1,52 +1,42 @@
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
-const gallery = document.querySelector('.gallery');
-let lightbox = null;
-
-
-export function renderImages(images) {
-  const markup = images
-    .map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) => `
-            <li class="gallery-item">
-                    <a href="${largeImageURL}" class="gallery">
-                    <img class="gallery-image" src="${webformatURL}" alt="${tags}">
-                    </a>
-                
-
-                <div class="info">
-                    <p><b>Likes:</b> ${likes}</p>
-                    <p><b>Views:</b> ${views}</p>
-                    <p><b>Comments:</b> ${comments}</p>
-                    <p><b>Downloads:</b> ${downloads}</p>
-                </div>
-            </li>
-        `
-    )
-    .join('');
-
-  gallery.insertAdjacentHTML('beforeend', markup);
-  if (!lightbox) {
-    lightbox = new SimpleLightbox('.gallery a');
-  } else {
-    lightbox.refresh();
-  }
+function imgTemplate(img) {
+  const { webformatURL, largeImageURL, tags, likes, views, comments, downloads } = img;
+  return `<li class="gallery-item">
+  <a class="gallery-link" href="${img.largeImageURL}">
+    <img
+      class="gallery-image"
+      src="${img.webformatURL}"
+      alt="${img.tags}"
+    />
+  </a>
   
-}
+  <ul class="image-info">
+      <li class="info-item">
+        <p class="text">Likes</p>
+        <p class="text-value">${img.likes}</p>
+      </li>
+      <li class="info-item">
+        <p class="text">Views</p>
+        <p class="text-value">${img.views}</p>
+      </li>
+      <li class="info-item">
+        <p class="text">Comments</p>
+        <p class="text-value">${img.comments}</p>
+      </li>
+      <li class="info-item">
+        <p class="text">Downloads</p>
+        <p class="text-value">${img.downloads}</p>
+      </li>
+      </ul>
+</li>`
+};
+export const lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
-export function clearGallery() {
-  gallery.innerHTML = '';
-  if (lightbox) {
-    lightbox.destroy();
-    lightbox = null;
-  }
+export function imgsTemplate(imgs) {
+  return imgs.map(imgTemplate).join('');
 }
