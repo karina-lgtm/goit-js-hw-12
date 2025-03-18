@@ -4,8 +4,12 @@ import injectHTML from 'vite-plugin-html-inject';
 import FullReload from 'vite-plugin-full-reload';
 import SortCss from 'postcss-sort-media-queries';
 
+
+const repoName = 'goit-js-hw-12';
+
 export default defineConfig(({ command }) => {
   return {
+    base: `/${repoName}/`,
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },
@@ -20,18 +24,8 @@ export default defineConfig(({ command }) => {
               return 'vendor';
             }
           },
-          entryFileNames: chunkInfo => {
-            if (chunkInfo.name === 'commonHelpers') {
-              return 'commonHelpers.js';
-            }
-            return '[name].js';
-          },
-          assetFileNames: assetInfo => {
-            if (assetInfo.name && assetInfo.name.endsWith('.html')) {
-              return '[name].[ext]';
-            }
-            return 'assets/[name]-[hash][extname]';
-          },
+          entryFileNames: '[name].js',
+          assetFileNames: 'assets/[name]-[hash][extname]',
         },
       },
       outDir: '../dist',
@@ -39,10 +33,11 @@ export default defineConfig(({ command }) => {
     },
     plugins: [
       injectHTML(),
-      FullReload(['./src/**/**.html']),
+      FullReload(['./src/**/*.html']),
       SortCss({
         sort: 'mobile-first',
       }),
     ],
   };
 });
+
