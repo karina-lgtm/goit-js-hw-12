@@ -1,87 +1,69 @@
-import { fetchImages } from './js/pixabay-api.js';
-import { renderImages, clearGallery } from './js/render-functions.js';
+import { fetchImages } from "./js/pixabay-api.js";
+import { renderGallery } from "./js/render-functions.js";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
-const form = document.querySelector('.search-form');
-const gallery = document.querySelector('.gallery');
-const loadMoreBtn = document.querySelector('.load-more');
-const loader = document.querySelector('.loader');
+const form = document.querySelector("#search-form");
+const gallery = document.querySelector(".gallery");
+const loadMoreBtn = document.querySelector("#load-more");
+const loader = document.querySelector(".loader");
 
-let currentPage = 1;
-let currentQuery = '';
-let totalHits = 0;
+let query = "";
+let page = 1;
 const perPage = 40;
+let lastItemBeforeLoad = null;
 
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
-  currentQuery = event.target.searchQuery.value.trim();
-  currentPage = 1;
-  
-  if (!currentQuery) {
-    iziToast.warning({ message: 'Please enter a search query!' });
-    return;
-  }
+form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    query = event.target.elements.searchQuery.value.trim();
 
-  clearGallery();
-  loadMoreBtn.classList.add('hidden');
-  loader.classList.remove('hidden');
-
-  try {
-    const data = await fetchImages(currentQuery, currentPage, perPage);
-    totalHits = data.totalHits;
-    
-    if (data.hits.length === 0) {
-      iziToast.error({ message: 'Sorry, there are no images matching your search query. Please try again!' });
-      return;
+    if (!query) {
+        iziToast.warning({ title: "Warning", message: "Please enter a search term!" });
+        return;
     }
-    
-    renderImages(data.hits);
-    checkLoadMore(data);
-  } catch (error) {
-    iziToast.error({ message: error.message });
-  } finally {
-    loader.classList.add('hidden');
-  }
+
+    page = 1;
+    gallery.innerHTML = "";
+    loadMoreBtn.classList.add("hidden");
+    loader.classList.remove("hidden");
+
+    const { hits, totalHits } = await fetchImages(query, page, perPage);
+    loader.classList.add("hidden");
+
+    if (hits.length === 0) {
+        iziToast.error({ message: "No images found. Try again!" });
+        return;
+    }
+
+    renderGallery(hits);
+
+    if (perPage < totalHits) {
+        loadMoreBtn.classList.remove("hidden");
+    }
 });
 
-loadMoreBtn.addEventListener('click', async () => {
-  currentPage++;
-  loader.classList.remove('hidden');
-  loadMoreBtn.classList.add('hidden');
+loadMoreBtn.addEventListener("click", async () => {
+    lastItemBeforeLoad = document.querySelector(".gallery-item:last-of-type");
 
-  try {
-    const data = await fetchImages(currentQuery, currentPage, perPage);
-    renderImages(data.hits);
-    checkLoadMore(data);
-    smoothScroll();
-  } catch (error) {
-    iziToast.error({ message: error.message });
-  } finally {
-    loader.classList.add('hidden');
-  }
+    page += 1;
+    loader.classList.remove("hidden");
+
+    const { hits, totalHits } = await fetchImages(query, page, perPage);
+    loader.classList.add("hidden");
+
+    renderGallery(hits, true);
+
+    setTimeout(() => {
+        if (lastItemBeforeLoad) {
+            const firstNewItem = lastItemBeforeLoad.nextElementSibling;
+            if (firstNewItem) {
+                firstNewItem.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+        }
+    }, 300);
+
+    if (page * perPage >= totalHits) {
+        loadMoreBtn.classList.add("hidden");
+        iziToast.info({ message: "We're sorry, but you've reached the end of search results." });
+    }
 });
-
-function checkLoadMore(data) {
-  const totalLoaded = currentPage * perPage;
-  if (totalLoaded >= totalHits) {
-    iziToast.info({ message: "End of results" });
-    loadMoreBtn.classList.add('hidden');
-  } else {
-    loadMoreBtn.classList.remove('hidden');
-  }
-}
-
-function smoothScroll() {
-  const galleryItem = gallery.firstElementChild;
-  if (galleryItem) {
-    const { height } = galleryItem.getBoundingClientRect();
-    window.scrollBy({
-      top: height * 2,
-      behavior: 'smooth'
-    });
-  }
-}
-
-
-
