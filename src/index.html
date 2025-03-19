@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,27 +7,20 @@
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <div class="container">
-      <form class="form"> 
-        <input
-          type="text"
-          id="image-input"
-          name="query"
-          placeholder="Search images..."
-          required
-        />
-        <button type="submit" id="search-button">Search</button>
-      </form>
-    </div>
+    <form id="search-form">
+      <input
+        type="text"
+        name="searchQuery"
+        placeholder="Search images..."
+        required
+      />
+      <button type="submit">Search</button>
+    </form>
 
-    <ul class="gallery"></ul>
+    <div class="gallery"></div>
 
-    <div class="controls">
-      <button type="button" class="js-load-btn hidden" data-action="load-more">
-        <span class="load-label">Load more</span>
-      </button>
-      <div class="loader js-loader hidden"></div> 
-    </div>
+    <button id="load-more" class="hidden">Load more</button>
+    <div class="loader hidden"></div>
 
     <script type="module" src="./main.js"></script>
   </body>

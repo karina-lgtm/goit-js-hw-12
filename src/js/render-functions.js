@@ -1,30 +1,36 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-export const lightbox = new SimpleLightbox('.gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
-});
+let lightbox;
 
-function imgTemplate({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) {
-  return `<li class="gallery-item">
-    <a class="gallery-link" href="${largeImageURL}">
-      <img class="gallery-image" src="${webformatURL}" alt="${tags}" />
-    </a>
-    <ul class="image-info">
-      <li class="info-item"><p class="text">Likes</p><p class="text-value">${likes}</p></li>
-      <li class="info-item"><p class="text">Views</p><p class="text-value">${views}</p></li>
-      <li class="info-item"><p class="text">Comments</p><p class="text-value">${comments}</p></li>
-      <li class="info-item"><p class="text">Downloads</p><p class="text-value">${downloads}</p></li>
-    </ul>
-  </li>`;
-}
+export function renderGallery(images, append = false) {
+    const gallery = document.querySelector(".gallery");
+    if (!gallery) return;
 
-export function imgsTemplate(imgs) {
-  return imgs.map(imgTemplate).join('');
-}
+    if (!append) {
+        gallery.innerHTML = "";
+    }
 
-export function renderGallery(refs, imgs) {
-  refs.gallery.insertAdjacentHTML('beforeend', imgsTemplate(imgs));
-  lightbox.refresh();
+    const markup = images.map(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) =>
+        `<a href="${largeImageURL}" class="gallery-item">
+            <img src="${webformatURL}" alt="${tags}" />
+            <div class="info">
+                <p><span class="label">Likes:</span> ${likes}</p>
+                <p><span class="label">Views:</span> ${views}</p>
+                <p><span class="label">Comments:</span> ${comments}</p>
+                <p><span class="label">Downloads:</span> ${downloads}</p>
+            </div>
+        </a>`
+    ).join('');
+
+    gallery.insertAdjacentHTML("beforeend", markup);
+
+    if (!lightbox) {
+        lightbox = new SimpleLightbox(".gallery a", {
+            captions: true,
+            captionsData: "alt",
+            captionDelay: 250,
+        });
+    }
+    lightbox.refresh();
 }
