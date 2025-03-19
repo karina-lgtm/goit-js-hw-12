@@ -3,8 +3,7 @@ import { renderGallery } from "./js/render-functions.js";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("#search-form");
     const gallery = document.querySelector(".gallery");
     const loadMoreBtn = document.querySelector("#load-more");
@@ -12,15 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let query = "";
     let page = 1;
-    const perPage = 40;
+    const perPage = 15;
     let lastItemBeforeLoad = null;
 
     if (!form || !gallery || !loadMoreBtn || !loader) {
-        console.error("Не все элементы доступны для привязки событий.");
+        console.error("Не всі елементи знайдені.");
         return;
     }
 
- 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
         query = event.target.elements.searchQuery.value.trim();
@@ -35,45 +33,56 @@ document.addEventListener('DOMContentLoaded', () => {
         loadMoreBtn.classList.add("hidden");
         loader.classList.remove("hidden");
 
-        const { hits, totalHits } = await fetchImages(query, page, perPage);
-        loader.classList.add("hidden");
+        try {
+            const { hits, totalHits } = await fetchImages(query, page, perPage);
+            loader.classList.add("hidden");
 
-        if (hits.length === 0) {
-            iziToast.error({ message: "No images found. Try again!" });
-            return;
-        }
+            if (hits.length === 0) {
+                iziToast.error({ message: "No images found. Try again!" });
+                return;
+            }
 
-        renderGallery(hits);
+            renderGallery(hits);
 
-        if (perPage < totalHits) {
-            loadMoreBtn.classList.remove("hidden");
+            if (perPage < totalHits) {
+                loadMoreBtn.classList.remove("hidden");
+            }
+        } catch (error) {
+            loader.classList.add("hidden");
+            iziToast.error({ message: "An error occurred. Please try again later!" });
         }
     });
 
-    
     loadMoreBtn.addEventListener("click", async () => {
         lastItemBeforeLoad = document.querySelector(".gallery-item:last-of-type");
 
         page += 1;
         loader.classList.remove("hidden");
 
-        const { hits, totalHits } = await fetchImages(query, page, perPage);
-        loader.classList.add("hidden");
+        try {
+            const { hits, totalHits } = await fetchImages(query, page, perPage);
+            loader.classList.add("hidden");
 
-        renderGallery(hits, true);
+            if (hits.length === 0) return;
 
-        setTimeout(() => {
-            if (lastItemBeforeLoad) {
-                const firstNewItem = lastItemBeforeLoad.nextElementSibling;
-                if (firstNewItem) {
-                    firstNewItem.scrollIntoView({ behavior: "smooth", block: "start" });
+            renderGallery(hits, true);
+
+            setTimeout(() => {
+                if (lastItemBeforeLoad) {
+                    const firstNewItem = lastItemBeforeLoad.nextElementSibling;
+                    if (firstNewItem) {
+                        firstNewItem.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }
                 }
-            }
-        }, 300);
+            }, 300);
 
-        if (page * perPage >= totalHits) {
-            loadMoreBtn.classList.add("hidden");
-            iziToast.info({ message: "We're sorry, but you've reached the end of search results." });
+            if (page * perPage >= totalHits) {
+                loadMoreBtn.classList.add("hidden");
+                iziToast.info({ message: "We're sorry, but you've reached the end of search results." });
+            }
+        } catch (error) {
+            loader.classList.add("hidden");
+            iziToast.error({ message: "Failed to load more images. Try again!" });
         }
     });
 });

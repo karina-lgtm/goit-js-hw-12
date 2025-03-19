@@ -5,7 +5,7 @@ import "izitoast/dist/css/iziToast.min.css";
 const API_KEY = "48859120-c5edc5c574d1328ed42f58f74";
 const BASE_URL = "https://pixabay.com/api/";
 
-export async function fetchImages(query, page = 1, perPage = 40) {
+export async function fetchImages(query, page = 1, perPage = 15) {
     try {
         const response = await axios.get(BASE_URL, {
             params: {
@@ -19,14 +19,22 @@ export async function fetchImages(query, page = 1, perPage = 40) {
             },
         });
 
-        if (!response.data.hits.length) {
+        if (response.status !== 200) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const { hits, totalHits } = response.data;
+
+        if (hits.length === 0) {
+            iziToast.warning({
+                title: "No results",
+                message: "No images found. Try another search!",
+            });
             return { hits: [], totalHits: 0 };
         }
 
-        return {
-            hits: response.data.hits,
-            totalHits: response.data.totalHits,
-        };
+        return { hits, totalHits };
+
     } catch (error) {
         iziToast.error({
             title: "Error",
