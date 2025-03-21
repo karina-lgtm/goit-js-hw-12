@@ -9,15 +9,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const loadMoreBtn = document.querySelector("#load-more");
     const loader = document.querySelector(".loader");
 
-    let query = "";
-    let page = 1;
-    const perPage = 15;
-    let lastItemBeforeLoad = null;
-
     if (!form || !gallery || !loadMoreBtn || !loader) {
-        console.error("Не всі елементи знайдені.");
+        console.error("Помилка: Один або більше елементів не знайдено.");
         return;
     }
+
+    let query = "";
+    let page = 1;
+    const perPage = 40;
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -54,8 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     loadMoreBtn.addEventListener("click", async () => {
-        lastItemBeforeLoad = document.querySelector(".gallery-item:last-of-type");
-
         page += 1;
         loader.classList.remove("hidden");
 
@@ -67,13 +64,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             renderGallery(hits, true);
 
+          
             setTimeout(() => {
-                if (lastItemBeforeLoad) {
-                    const firstNewItem = lastItemBeforeLoad.nextElementSibling;
-                    if (firstNewItem) {
-                        firstNewItem.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }
-                }
+                const { height: cardHeight } = document.querySelector(".gallery-item").getBoundingClientRect();
+                window.scrollBy({ top: cardHeight * 2, behavior: "smooth" });
             }, 300);
 
             if (page * perPage >= totalHits) {
