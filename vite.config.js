@@ -4,12 +4,11 @@ import injectHTML from 'vite-plugin-html-inject';
 import FullReload from 'vite-plugin-full-reload';
 import SortCss from 'postcss-sort-media-queries';
 
-
 const repoName = 'goit-js-hw-12';
 
 export default defineConfig(({ command }) => {
   return {
-    base: `/${repoName}/`,
+    base: command === 'serve' ? '/' : `/${repoName}/`,
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },
@@ -40,4 +39,3 @@ export default defineConfig(({ command }) => {
     ],
   };
 });
-
