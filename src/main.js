@@ -4,13 +4,17 @@ import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.querySelector("#search-form");
+    const form = document.querySelector(".form");
     const gallery = document.querySelector(".gallery");
     const loadMoreBtn = document.querySelector("#load-more");
     const loader = document.querySelector(".loader");
 
     if (!form || !gallery || !loadMoreBtn || !loader) {
         console.error("Помилка: Один або більше елементів не знайдено.");
+        console.log("Форма:", form);
+        console.log("Галерея:", gallery);
+        console.log("Кнопка 'Load More':", loadMoreBtn);
+        console.log("Лоадер:", loader);
         return;
     }
 
@@ -64,10 +68,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             renderGallery(hits, true);
 
-          
             setTimeout(() => {
-                const { height: cardHeight } = document.querySelector(".gallery-item").getBoundingClientRect();
-                window.scrollBy({ top: cardHeight * 2, behavior: "smooth" });
+                const firstNewItem = document.querySelector(".gallery-item");
+                if (firstNewItem) {
+                    const { height: cardHeight } = firstNewItem.getBoundingClientRect();
+                    window.scrollBy({ top: cardHeight * 2, behavior: "smooth" });
+                }
             }, 300);
 
             if (page * perPage >= totalHits) {
