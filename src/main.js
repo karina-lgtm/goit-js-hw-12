@@ -4,25 +4,20 @@ import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 document.addEventListener("DOMContentLoaded", () => {
-  
     const form = document.querySelector(".form");
     const gallery = document.querySelector(".gallery");
     const loadMoreBtn = document.querySelector("#load-more");
     const loader = document.querySelector(".loader");
 
-    
     if (!form || !gallery || !loadMoreBtn || !loader) {
-        console.error("❌ Помилка: Один або більше елементів не знайдено.");
-        console.log("🔍 Форма:", form);
-        console.log("🔍 Галерея:", gallery);
-        console.log("🔍 Кнопка 'Load More':", loadMoreBtn);
-        console.log("🔍 Лоадер:", loader);
+        console.error("Помилка: Один або більше елементів не знайдено.");
         return;
     }
 
     let query = "";
     let page = 1;
     const perPage = 40;
+    let totalImages = 0; 
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -47,10 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            totalImages = hits.length; 
             renderGallery(hits);
 
-            if (perPage < totalHits) {
+            if (totalImages < totalHits) {
                 loadMoreBtn.classList.remove("hidden");
+            } else {
+                loadMoreBtn.classList.add("hidden");
             }
         } catch (error) {
             loader.classList.add("hidden");
@@ -68,17 +66,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (hits.length === 0) return;
 
+            totalImages += hits.length; 
             renderGallery(hits, true);
 
             setTimeout(() => {
-                const firstNewItem = document.querySelector(".gallery-item");
-                if (firstNewItem) {
-                    const { height: cardHeight } = firstNewItem.getBoundingClientRect();
-                    window.scrollBy({ top: cardHeight * 2, behavior: "smooth" });
-                }
+                const { height: cardHeight } = document.querySelector(".gallery-item").getBoundingClientRect();
+                window.scrollBy({ top: cardHeight * 2, behavior: "smooth" });
             }, 300);
 
-            if (page * perPage >= totalHits) {
+            if (totalImages >= totalHits) {
                 loadMoreBtn.classList.add("hidden");
                 iziToast.info({ message: "We're sorry, but you've reached the end of search results." });
             }
