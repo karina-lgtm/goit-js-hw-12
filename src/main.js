@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let query = "";
     let page = 1;
     const perPage = 40;
-    let totalImages = 0; 
+    let totalHits = 0; 
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         loader.classList.remove("hidden");
 
         try {
-            const { hits, totalHits } = await fetchImages(query, page, perPage);
+            const { hits, totalHits: apiTotalHits } = await fetchImages(query, page, perPage);
             loader.classList.add("hidden");
 
             if (hits.length === 0) {
@@ -42,13 +42,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            totalImages = hits.length; 
+            totalHits = apiTotalHits;
             renderGallery(hits);
 
-            if (totalImages < totalHits) {
+            if (perPage < totalHits) {
                 loadMoreBtn.classList.remove("hidden");
-            } else {
-                loadMoreBtn.classList.add("hidden");
             }
         } catch (error) {
             loader.classList.add("hidden");
@@ -61,12 +59,11 @@ document.addEventListener("DOMContentLoaded", () => {
         loader.classList.remove("hidden");
 
         try {
-            const { hits, totalHits } = await fetchImages(query, page, perPage);
+            const { hits } = await fetchImages(query, page, perPage);
             loader.classList.add("hidden");
 
             if (hits.length === 0) return;
 
-            totalImages += hits.length; 
             renderGallery(hits, true);
 
             setTimeout(() => {
@@ -74,7 +71,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 window.scrollBy({ top: cardHeight * 2, behavior: "smooth" });
             }, 300);
 
-            if (totalImages >= totalHits) {
+           
+            if (page * perPage >= totalHits) {
                 loadMoreBtn.classList.add("hidden");
                 iziToast.info({ message: "We're sorry, but you've reached the end of search results." });
             }
